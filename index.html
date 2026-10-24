@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Treasure Pirate - 2D Platformer</title>
   <!-- Google Fonts: Press Start 2P -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,31 +16,36 @@
     <div id="game-container">
       <canvas id="gameCanvas" width="640" height="360"></canvas>
 
-      <!-- Heads-Up Display (HUD) -->
+      <!-- Heads-Up Display (HUD) - Ultra Compact Header -->
       <div id="hud" class="hud hidden">
-        <div class="hud-item hearts-container" title="Jonlar">
-          <span id="hud-hearts" class="hud-val">❤️❤️❤️</span>
+        <div class="hud-left">
+          <div class="hud-item hearts-container" title="Jonlar">
+            <span id="hud-hearts" class="hud-val">❤️❤️❤️</span>
+          </div>
+          <div class="hud-item" title="Kalitlar">
+            <span class="hud-icon">🔑</span>
+            <span id="hud-keys" class="hud-val">0/3</span>
+          </div>
+          <div class="hud-item" title="Tangalar">
+            <span class="hud-coin-badge" aria-hidden="true"></span>
+            <span id="hud-coins" class="hud-val">0</span>
+          </div>
+          <div class="hud-item hud-score-item" title="Ball">
+            <span class="hud-icon">⭐</span>
+            <span id="hud-score" class="hud-val">0</span>
+          </div>
         </div>
-        <div class="hud-item" title="Kalitlar">
-          <span class="hud-icon">🔑</span>
-          <span id="hud-keys" class="hud-val">0/3</span>
-        </div>
-        <div class="hud-item" title="Tangalar">
-          <span class="hud-coin-badge" aria-hidden="true"></span>
-          <span id="hud-coins" class="hud-val">0</span>
-        </div>
-        <div class="hud-item" title="Ball">
-          <span class="hud-icon">⭐</span>
-          <span id="hud-score" class="hud-val">0</span>
-        </div>
-        <div class="hud-item" title="Bosqich">
-          <span class="hud-label">BOSQICH</span>
-          <span id="hud-level" class="hud-val">1/4</span>
-        </div>
-        <div class="hud-actions">
-          <button id="btn-sound-toggle" class="btn-icon" title="Ovozni yoqish/o'chirish" aria-label="Ovoz">🔊</button>
-          <button id="btn-fullscreen-toggle" class="btn-icon" title="To'liq ekran" aria-label="To'liq ekran">⛶</button>
-          <button id="btn-pause-toggle" class="btn-icon" title="Pauza (P)" aria-label="Pauza">⏸️</button>
+
+        <div class="hud-right">
+          <div class="hud-item hud-level-item" title="Bosqich">
+            <span class="hud-label">LV</span>
+            <span id="hud-level" class="hud-val">1/4</span>
+          </div>
+          <div class="hud-actions">
+            <button id="btn-sound-toggle" class="btn-icon" title="Ovozni yoqish/o'chirish" aria-label="Ovoz">🔊</button>
+            <button id="btn-fullscreen-toggle" class="btn-icon" title="To'liq ekran" aria-label="To'liq ekran">⛶</button>
+            <button id="btn-pause-toggle" class="btn-icon" title="Pauza (P)" aria-label="Pauza">⏸️</button>
+          </div>
         </div>
       </div>
 
@@ -59,18 +64,21 @@
             <span id="menu-high-score" class="gold-text">0</span>
           </div>
 
-          <button id="btn-start" class="btn btn-primary pulse-btn">O'YINNI BOSHLASH</button>
+          <div class="menu-cta-group">
+            <button id="btn-start" class="btn btn-primary pulse-btn">O'YINNI BOSHLASH</button>
+            <button id="btn-menu-fullscreen" class="btn btn-secondary btn-menu-fs">⛶ TO'LIQ EKRAN</button>
+          </div>
 
           <div class="instructions-card">
             <h3>BOSHQARUV VA QOIDALAR:</h3>
             <div class="control-row">
-              <span class="key-pill">A</span> <span class="key-pill">D</span> yoki <span class="key-pill">←</span> <span class="key-pill">→</span> : Yurish
+              <span class="key-pill">A</span> <span class="key-pill">D</span> yoki <span class="key-pill">◀</span> <span class="key-pill">▶</span> : Yurish
             </div>
             <div class="control-row">
-              <span class="key-pill">W</span> / <span class="key-pill">SPACE</span> / <span class="key-pill">↑</span> : Sakrash
+              <span class="key-pill">W</span> / <span class="key-pill">SPACE</span> / <span class="key-pill">▲</span> : Sakrash
             </div>
             <div class="control-row">
-              <span class="key-pill">J</span> / <span class="key-pill">Z</span> / <span class="key-pill">ENTER</span> : Qilich zarbasi ⚔️
+              <span class="key-pill">J</span> / <span class="key-pill">⚔️</span> : Qilich zarbasi
             </div>
             <div class="control-row">
               <span class="key-pill">P</span> : Pauza
@@ -178,8 +186,8 @@
       </div>
     </div>
 
-    <!-- Rotate suggestion hint for portrait mobile -->
-    <div id="rotate-hint" class="rotate-hint">🔄 Qulay o'yin uchun telefonni yonboshga (landscape) buring!</div>
+    <!-- Rotate suggestion hint for portrait mobile (interactive) -->
+    <div id="rotate-hint" class="rotate-hint" title="Bosing: To'liq ekranga o'tish">📱 To'liq ekran uchun telefonni yonboshga buring (Landscape) ➔</div>
 
     <!-- Touch Controls (Mobile / Tablet Virtual Gamepad) -->
     <div id="touch-controls" class="touch-controls hidden">

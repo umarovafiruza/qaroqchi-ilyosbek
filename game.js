@@ -3147,7 +3147,8 @@ class GameEngine {
       btnTouchRight: document.getElementById('btn-touch-right'),
       btnTouchJump: document.getElementById('btn-touch-jump'),
       btnTouchAttack: document.getElementById('btn-touch-attack'),
-      rotateHint: document.getElementById('rotate-hint')
+      rotateHint: document.getElementById('rotate-hint'),
+      btnMenuFullscreen: document.getElementById('btn-menu-fullscreen')
     };
 
     this.lastTime = 0;
@@ -3350,10 +3351,48 @@ class GameEngine {
       });
     }
 
-    document.addEventListener('fullscreenchange', () => {
-      if (this.dom.btnFullscreen) {
-        this.dom.btnFullscreen.textContent = document.fullscreenElement ? '✕' : '⛶';
+    if (this.dom.btnMenuFullscreen) {
+      this.dom.btnMenuFullscreen.addEventListener('click', () => {
+        triggerHaptic();
+        this.toggleFullscreen();
+      });
+    }
+
+    if (this.dom.rotateHint) {
+      this.dom.rotateHint.addEventListener('click', () => {
+        triggerHaptic();
+        this.toggleFullscreen();
+      });
+    }
+
+    const handleFSChange = () => {
+      const isStandardFS = !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+      );
+      const isPseudoFS = document.body.classList.contains('fullscreen-mode');
+      const active = isStandardFS || isPseudoFS;
+
+      const icon = active ? '✕' : '⛶';
+      if (this.dom.btnFullscreen) this.dom.btnFullscreen.textContent = icon;
+      if (this.dom.btnMenuFullscreen) {
+        this.dom.btnMenuFullscreen.textContent = active ? '✕ ODATIY EKRAN' : '⛶ TO\'LIQ EKRAN';
       }
+    };
+
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach((evt) => {
+      document.addEventListener(evt, handleFSChange);
+    });
+
+    window.addEventListener('resize', () => {
+      window.scrollTo(0, 0);
+    });
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 200);
     });
 
     this.dom.btnPause.addEventListener('click', () => {
@@ -3362,21 +3401,85 @@ class GameEngine {
     });
   }
 
-  // To'liq ekran (Fullscreen API)
+  // To'liq ekran rejimi (Cross-browser Fullscreen API + iOS/Mobile Pseudo-Fullscreen fallback + Orientation Lock)
   toggleFullscreen() {
-    const el = document.documentElement;
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      if (el.requestFullscreen) {
-        el.requestFullscreen();
-      } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
+    const isStandardFS = !!(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement
+    );
+    const isPseudoFS = document.body.classList.contains('fullscreen-mode') || document.body.classList.contains('pseudo-fullscreen');
+    const isFS = isStandardFS || isPseudoFS;
+
+    const setFullscreenUI = (active) => {
+      const icon = active ? '✕' : '⛶';
+      if (this.dom.btnFullscreen) this.dom.btnFullscreen.textContent = icon;
+      if (this.dom.btnMenuFullscreen) {
+        this.dom.btnMenuFullscreen.textContent = active ? '✕ ODATIY EKRAN' : '⛶ TO\'LIQ EKRAN';
       }
+
+      if (active) {
+        document.body.classList.add('fullscreen-mode', 'pseudo-fullscreen');
+        document.documentElement.classList.add('fullscreen-mode');
+        window.scrollTo(0, 0);
+        if (screen.orientation && screen.orientation.lock) {
+          try {
+            screen.orientation.lock('landscape').catch(() => {});
+          } catch (e) {}
+        }
+      } else {
+        document.body.classList.remove('fullscreen-mode', 'pseudo-fullscreen');
+        document.documentElement.classList.remove('fullscreen-mode');
+        if (screen.orientation && screen.orientation.unlock) {
+          try {
+            screen.orientation.unlock();
+          } catch (e) {}
+        }
+      }
+    };
+
+    if (!isFS) {
+      const el = document.documentElement;
+      const requestFS =
+        el.requestFullscreen ||
+        el.webkitRequestFullscreen ||
+        el.webkitRequestFullScreen ||
+        el.mozRequestFullScreen ||
+        el.msRequestFullscreen;
+
+      if (requestFS) {
+        try {
+          const promise = requestFS.call(el);
+          if (promise && promise.catch) {
+            promise.catch(() => {
+              setFullscreenUI(true);
+            });
+          }
+        } catch (e) {
+          setFullscreenUI(true);
+        }
+      } else {
+        setFullscreenUI(true);
+      }
+      setFullscreenUI(true);
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
+      const exitFS =
+        document.exitFullscreen ||
+        document.webkitExitFullscreen ||
+        document.webkitCancelFullScreen ||
+        document.mozCancelFullScreen ||
+        document.msExitFullscreen;
+
+      if (isStandardFS && exitFS) {
+        try {
+          const promise = exitFS.call(document);
+          if (promise && promise.catch) {
+            promise.catch(() => {});
+          }
+        } catch (e) {}
       }
+      setFullscreenUI(false);
     }
   }
 
