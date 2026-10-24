@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Treasure Pirate - 2D Platformer</title>
+  <!-- Google Fonts: Press Start 2P -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <!-- Game Container with Canvas & Overlays -->
+    <div id="game-container">
+      <canvas id="gameCanvas" width="640" height="360"></canvas>
+
+      <!-- Heads-Up Display (HUD) -->
+      <div id="hud" class="hud hidden">
+        <div class="hud-item hearts-container" title="Jonlar">
+          <span id="hud-hearts" class="hud-val">❤️❤️❤️</span>
+        </div>
+        <div class="hud-item" title="Kalitlar">
+          <span class="hud-icon">🔑</span>
+          <span id="hud-keys" class="hud-val">0/3</span>
+        </div>
+        <div class="hud-item" title="Tangalar">
+          <span class="hud-coin-badge" aria-hidden="true"></span>
+          <span id="hud-coins" class="hud-val">0</span>
+        </div>
+        <div class="hud-item" title="Ball">
+          <span class="hud-icon">⭐</span>
+          <span id="hud-score" class="hud-val">0</span>
+        </div>
+        <div class="hud-item" title="Bosqich">
+          <span class="hud-label">BOSQICH</span>
+          <span id="hud-level" class="hud-val">1/4</span>
+        </div>
+        <div class="hud-actions">
+          <button id="btn-sound-toggle" class="btn-icon" title="Ovozni yoqish/o'chirish" aria-label="Ovoz">🔊</button>
+          <button id="btn-fullscreen-toggle" class="btn-icon" title="To'liq ekran" aria-label="To'liq ekran">⛶</button>
+          <button id="btn-pause-toggle" class="btn-icon" title="Pauza (P)" aria-label="Pauza">⏸️</button>
+        </div>
+      </div>
+
+      <!-- In-Game Notification Banner -->
+      <div id="game-banner" class="game-banner hidden"></div>
+
+      <!-- Start Menu Screen -->
+      <div id="screen-menu" class="screen-overlay">
+        <div class="menu-box">
+          <div class="pirate-badge">🏴‍☠️</div>
+          <h1 class="game-title">TREASURE<br><span class="gold-text">PIRATE</span></h1>
+          <p class="game-subtitle">Kichkina qaroqchining orol sarguzashti</p>
+
+          <div class="high-score-tag">
+            <span>ENG YUQORI BALL:</span>
+            <span id="menu-high-score" class="gold-text">0</span>
+          </div>
+
+          <button id="btn-start" class="btn btn-primary pulse-btn">O'YINNI BOSHLASH</button>
+
+          <div class="instructions-card">
+            <h3>BOSHQARUV VA QOIDALAR:</h3>
+            <div class="control-row">
+              <span class="key-pill">A</span> <span class="key-pill">D</span> yoki <span class="key-pill">←</span> <span class="key-pill">→</span> : Yurish
+            </div>
+            <div class="control-row">
+              <span class="key-pill">W</span> / <span class="key-pill">SPACE</span> / <span class="key-pill">↑</span> : Sakrash
+            </div>
+            <div class="control-row">
+              <span class="key-pill">J</span> / <span class="key-pill">Z</span> / <span class="key-pill">ENTER</span> : Qilich zarbasi ⚔️
+            </div>
+            <div class="control-row">
+              <span class="key-pill">P</span> : Pauza
+            </div>
+            <p class="hint-text">
+              ✨ 3 ta kalitni 🔑 yig'ing va oltin sandiqni oching!<br>
+              ⚔️ Qilich bilan dushman qaroqchilarni yenging va bochkalarni buzing!<br>
+              🦀 Dushmanlar ustiga sakrab ham yengish mumkin (+50)!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pause Screen -->
+      <div id="screen-pause" class="screen-overlay hidden">
+        <div class="menu-box">
+          <h2 class="screen-title">PAUZA</h2>
+          <p class="pause-subtitle">O'yin to'xtatildi</p>
+          <div class="menu-buttons">
+            <button id="btn-resume" class="btn btn-primary">DAVOM ETISH</button>
+            <button id="btn-restart-level" class="btn btn-secondary">QAYTA BOSHLASH</button>
+            <button id="btn-main-menu" class="btn btn-secondary">BOSH MENYU</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level Complete Screen -->
+      <div id="screen-level-complete" class="screen-overlay hidden">
+        <div class="menu-box">
+          <div class="trophy-icon">🏆</div>
+          <h2 class="screen-title gold-text">BOSQICH YAKUNLANDI!</h2>
+          <p id="level-complete-desc" class="level-desc">Qaroqchi barcha kalitlarni topdi va sandiqni ochdi!</p>
+
+          <div class="stats-card">
+            <div class="stat-row">
+              <span>Tangalar:</span>
+              <span id="lc-coins" class="gold-text">0</span>
+            </div>
+            <div class="stat-row">
+              <span>Bosqich bali:</span>
+              <span id="lc-score" class="gold-text">0</span>
+            </div>
+            <div class="stat-row highlight">
+              <span>Jami ball:</span>
+              <span id="lc-total-score" class="gold-text">0</span>
+            </div>
+          </div>
+
+          <button id="btn-next-level" class="btn btn-primary pulse-btn">KEYINGI BOSQICH ➔</button>
+        </div>
+      </div>
+
+      <!-- Game Over Screen -->
+      <div id="screen-game-over" class="screen-overlay hidden">
+        <div class="menu-box">
+          <div class="skull-icon">💀</div>
+          <h2 class="screen-title red-text">O'YIN TUGADI!</h2>
+          <p class="game-over-desc">Jonlaringiz qolmadi...</p>
+
+          <div class="stats-card">
+            <div class="stat-row">
+              <span>To'plangan ball:</span>
+              <span id="go-score" class="gold-text">0</span>
+            </div>
+            <div class="stat-row">
+              <span>Eng yuqori ball:</span>
+              <span id="go-high-score" class="gold-text">0</span>
+            </div>
+          </div>
+
+          <div class="menu-buttons">
+            <button id="btn-retry" class="btn btn-primary">QAYTA URINISH</button>
+            <button id="btn-game-over-menu" class="btn btn-secondary">BOSH MENYU</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Victory Screen -->
+      <div id="screen-win" class="screen-overlay hidden">
+        <div class="menu-box">
+          <div class="chest-celebration-icon">👑</div>
+          <h2 class="screen-title gold-text">QOYILMAQOM G'ALABA!</h2>
+          <p class="win-desc">Orolning eng buyuk xazinasi endi sizniki!</p>
+
+          <div class="stats-card victory-card">
+            <div class="stat-row">
+              <span>Jami tangalar:</span>
+              <span id="win-coins" class="gold-text">0</span>
+            </div>
+            <div class="stat-row">
+              <span>YAKUNIY BALL:</span>
+              <span id="win-score" class="gold-text highlight-big">0</span>
+            </div>
+            <div class="stat-row">
+              <span>Eng yuqori rekord:</span>
+              <span id="win-high-score" class="gold-text">0</span>
+            </div>
+            <div id="win-new-record" class="new-record-tag hidden">YANGI REKORD! 🎉</div>
+          </div>
+
+          <div class="menu-buttons">
+            <button id="btn-play-again" class="btn btn-primary pulse-btn">BOSHIDAN O'YNASH</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rotate suggestion hint for portrait mobile -->
+    <div id="rotate-hint" class="rotate-hint">🔄 Qulay o'yin uchun telefonni yonboshga (landscape) buring!</div>
+
+    <!-- Touch Controls (Mobile / Tablet Virtual Gamepad) -->
+    <div id="touch-controls" class="touch-controls hidden">
+      <div class="touch-dpad">
+        <button id="btn-touch-left" class="touch-btn touch-btn-dir" aria-label="Chapga">◀</button>
+        <button id="btn-touch-right" class="touch-btn touch-btn-dir" aria-label="O'ngga">▶</button>
+      </div>
+      <div class="touch-handheld-center" aria-hidden="true">
+        <span class="handheld-speaker"></span>
+        <span class="handheld-speaker"></span>
+        <span class="handheld-speaker"></span>
+      </div>
+      <div class="touch-actions">
+        <button id="btn-touch-attack" class="touch-btn touch-btn-attack" aria-label="Zarba">⚔️ ZARBA</button>
+        <button id="btn-touch-jump" class="touch-btn touch-btn-jump" aria-label="Sakrash">▲ SAKRASH</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

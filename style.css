@@ -1,0 +1,875 @@
+/* ==========================================================================
+   TREASURE PIRATE - RETRO PIXEL PLATFORMER STYLES
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+:root {
+  --sky-blue: #40b0ff;
+  --sea-deep: #0c3866;
+  --gold-primary: #ffcc00;
+  --gold-glow: #ffe680;
+  --gold-dark: #b38600;
+  --wood-brown: #5d3a1a;
+  --wood-dark: #3b230d;
+  --wood-light: #8b572a;
+  --sand-yellow: #f4c465;
+  --palm-green: #2ecc71;
+  --pirate-red: #e74c3c;
+  --pirate-dark-red: #962d22;
+  --text-white: #f5f6fa;
+  --text-dark: #1e272e;
+  --ui-bg: rgba(18, 30, 49, 0.92);
+  --ui-border: #ffd700;
+  --font-retro: 'Press Start 2P', 'Courier New', Courier, monospace;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #1b3a4b 0%, #0d1b2a 100%);
+  font-family: var(--font-retro);
+  color: var(--text-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Outer layout wrapper */
+#game-wrapper {
+  width: 100%;
+  height: 100%;
+  max-width: 1280px;
+  max-height: 720px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Aspect-ratio preserving game container */
+#game-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(64, 176, 255, 0.2);
+  border: 4px solid var(--wood-brown);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Crisp pixel-art canvas */
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: var(--sky-blue);
+}
+
+/* ==========================================================================
+   HEADS-UP DISPLAY (HUD)
+   ========================================================================== */
+.hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(18, 25, 36, 0.88);
+  border: 2px solid var(--gold-dark);
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  pointer-events: auto;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.hud-icon {
+  font-size: 14px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+.hud-coin-badge {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 35% 35%, #fff176 0%, #ffcc00 65%, #b38600 100%);
+  border-radius: 50%;
+  border: 1.5px solid #805b00;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.hud-coin-badge::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 3px;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.hud-val {
+  color: #fff;
+  font-weight: bold;
+}
+
+.hearts-container .hud-val {
+  font-size: 14px;
+  letter-spacing: 2px;
+  animation: pulse-heart 2s infinite ease-in-out;
+}
+
+@keyframes pulse-heart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.hud-label {
+  color: var(--gold-primary);
+  font-size: 9px;
+  margin-right: 2px;
+}
+
+.hud-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icon {
+  background: var(--wood-brown);
+  border: 2px solid var(--gold-primary);
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.1s, background-color 0.1s;
+}
+
+.btn-icon:hover {
+  background: var(--wood-light);
+  transform: translateY(-2px);
+}
+
+.btn-icon:active {
+  transform: translateY(1px);
+}
+
+/* ==========================================================================
+   NOTIFICATION BANNER
+   ========================================================================== */
+.game-banner {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(231, 76, 60, 0.95);
+  border: 3px solid #ffcc00;
+  color: #fff;
+  padding: 8px 18px;
+  font-size: 11px;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+  z-index: 25;
+  animation: pop-bounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@keyframes pop-bounce {
+  0% { transform: translate(-50%, -15px) scale(0.8); opacity: 0; }
+  100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   SCREENS & MODAL OVERLAYS
+   ========================================================================== */
+.screen-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 16, 28, 0.88);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 30;
+  backdrop-filter: blur(5px);
+  padding: 16px;
+  animation: fade-in 0.25s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.menu-box {
+  background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+  border: 4px solid var(--gold-primary);
+  border-radius: 10px;
+  padding: 24px 28px;
+  text-align: center;
+  max-width: 520px;
+  width: 95%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(255, 204, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.pirate-badge, .trophy-icon, .skull-icon, .chest-celebration-icon {
+  font-size: 42px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+}
+
+.game-title {
+  font-size: 24px;
+  line-height: 1.3;
+  color: #fff;
+  text-shadow: 3px 3px 0 #000, 0 0 10px rgba(255, 204, 0, 0.5);
+  letter-spacing: 2px;
+}
+
+.gold-text {
+  color: var(--gold-primary);
+  text-shadow: 2px 2px 0 var(--wood-dark), 0 0 10px rgba(255, 204, 0, 0.6);
+}
+
+.red-text {
+  color: var(--pirate-red);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.game-subtitle, .pause-subtitle, .level-desc, .game-over-desc, .win-desc {
+  font-size: 9px;
+  color: #bdc3c7;
+  line-height: 1.6;
+}
+
+.screen-title {
+  font-size: 18px;
+  letter-spacing: 1.5px;
+}
+
+.high-score-tag {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px dashed var(--gold-dark);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 9px;
+  display: flex;
+  gap: 8px;
+}
+
+.instructions-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 8px;
+  line-height: 1.7;
+  width: 100%;
+  text-align: left;
+}
+
+.instructions-card h3 {
+  color: var(--gold-primary);
+  font-size: 8.5px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.control-row {
+  margin: 4px 0;
+}
+
+.key-pill {
+  background: var(--wood-light);
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  border-bottom: 2px solid var(--wood-dark);
+  font-weight: bold;
+}
+
+.hint-text {
+  margin-top: 6px;
+  color: #81ecec;
+  font-size: 7.5px;
+  line-height: 1.5;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  padding-top: 6px;
+}
+
+/* Stats card for end screens */
+.stats-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--wood-light);
+  border-radius: 6px;
+  padding: 12px 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 9px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-row.highlight {
+  border-top: 1px solid rgba(255, 204, 0, 0.3);
+  padding-top: 6px;
+  font-size: 10px;
+}
+
+.highlight-big {
+  font-size: 14px;
+}
+
+.new-record-tag {
+  background: #27ae60;
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 8.5px;
+  letter-spacing: 1px;
+  animation: pulse-btn 1s infinite alternate;
+}
+
+/* Retro Buttons */
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.btn {
+  font-family: var(--font-retro);
+  font-size: 10px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.1s ease-in-out;
+  position: relative;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #ffcc00 0%, #e69500 100%);
+  color: #1a1a1a;
+  border-bottom: 4px solid #b36b00;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #ffe066 0%, #ffaa00 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 204, 0, 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.btn-secondary {
+  background: linear-gradient(180deg, #4b6584 0%, #34495e 100%);
+  color: #fff;
+  border-bottom: 4px solid #2c3e50;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(180deg, #57769a 0%, #3d556e 100%);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+.pulse-btn {
+  animation: pulse-btn 1.5s infinite alternate;
+}
+
+@keyframes pulse-btn {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 204, 0, 0.4); }
+  100% { transform: scale(1.03); box-shadow: 0 0 16px rgba(255, 204, 0, 0.7); }
+}
+
+/* ==========================================================================
+   ROTATE SUGGESTION HINT (PORTRAIT MOBILE)
+   ========================================================================== */
+.rotate-hint {
+  display: none;
+  background: rgba(18, 28, 44, 0.95);
+  border: 1.5px solid var(--gold-primary);
+  border-radius: 20px;
+  color: #ffd700;
+  padding: 5px 12px;
+  font-size: 7.5px;
+  text-align: center;
+  margin-bottom: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  animation: pulse-btn 2s infinite alternate;
+  z-index: 50;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   TOUCH CONTROLS FOR MOBILE / TABLET
+   ========================================================================== */
+.touch-controls {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 25;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+}
+
+.touch-dpad, .touch-actions {
+  display: flex;
+  gap: 14px;
+  pointer-events: auto;
+}
+
+.touch-handheld-center {
+  display: none;
+}
+
+.touch-btn {
+  background: rgba(22, 36, 52, 0.82);
+  border: 3px solid var(--gold-primary);
+  border-radius: 14px;
+  color: #ffffff;
+  font-family: var(--font-retro);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 204, 0, 0.15);
+  transition: transform 0.05s, background-color 0.05s, border-color 0.05s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-btn:active, .touch-btn.active {
+  background: rgba(255, 204, 0, 0.55);
+  border-color: #ffffff;
+  transform: scale(0.92);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 14px rgba(255, 204, 0, 0.8);
+}
+
+.touch-btn-dir {
+  width: 62px;
+  height: 62px;
+  font-size: 22px;
+}
+
+.touch-btn-jump {
+  min-width: 110px;
+  height: 62px;
+  font-size: 11px;
+  padding: 0 12px;
+  background: rgba(214, 48, 49, 0.85);
+  border-color: #ffd700;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.touch-btn-jump:active, .touch-btn-jump.active {
+  background: rgba(231, 76, 60, 1);
+  border-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 18px rgba(231, 76, 60, 0.9);
+}
+
+.touch-btn-attack {
+  min-width: 100px;
+  height: 62px;
+  font-size: 11px;
+  padding: 0 12px;
+  background: linear-gradient(180deg, rgba(230, 126, 34, 0.9) 0%, rgba(211, 84, 0, 0.95) 100%);
+  border-color: #ffd700;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.25);
+}
+
+.touch-btn-attack:active, .touch-btn-attack.active {
+  background: linear-gradient(180deg, #f39c12 0%, #e67e22 100%);
+  border-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 18px rgba(243, 156, 18, 0.95);
+}
+
+/* Kichik ekranlar va telefonlar uchun HUD moslashuvi */
+@media (max-width: 650px), (max-aspect-ratio: 1/1) {
+  .hud {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    padding: 5px 8px;
+    gap: 6px;
+  }
+
+  .hud-item {
+    gap: 3px;
+    font-size: 8.5px;
+  }
+
+  .hud-icon {
+    font-size: 11px;
+  }
+
+  .hud-coin-badge {
+    width: 11px;
+    height: 11px;
+  }
+
+  .hearts-container .hud-val {
+    font-size: 11px;
+    letter-spacing: -1px;
+  }
+
+  .hud-label {
+    display: none;
+  }
+
+  .level-container::before {
+    content: "B.";
+    color: var(--gold-primary);
+    font-size: 8px;
+    margin-right: 2px;
+  }
+
+  .hud-actions {
+    gap: 4px;
+  }
+
+  .btn-icon {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  .game-banner {
+    top: 40px;
+    padding: 6px 12px;
+    font-size: 8px;
+    max-width: 92%;
+    white-space: normal;
+    line-height: 1.4;
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN: MOBILE PORTRAIT (HANDHELD RETRO DECK)
+   ========================================================================== */
+@media (max-aspect-ratio: 1/1), (orientation: portrait) {
+  #game-wrapper {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px 6px;
+    height: 100%;
+    width: 100%;
+  }
+
+  .rotate-hint {
+    display: block;
+    font-size: 7.5px;
+    padding: 5px 12px;
+    margin: 6px 0;
+    border-radius: 12px;
+    background: rgba(18, 25, 36, 0.95);
+    border: 1px solid var(--gold-dark);
+    color: #ffcc00;
+    text-align: center;
+  }
+
+  #game-container {
+    width: 100%;
+    max-height: 48vh;
+    aspect-ratio: 16 / 9;
+    flex-shrink: 0;
+    border-width: 3px;
+  }
+
+  /* Portrait rejimida sensorli boshqaruvchi retro konsol pastki paneli */
+  .touch-controls {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    flex: 1;
+    min-height: 160px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px calc(18px + env(safe-area-inset-bottom, 0px)) 18px;
+    background: radial-gradient(circle at center, #1e2f45 0%, #0c141e 100%);
+    border: 3px solid var(--wood-brown);
+    border-radius: 14px;
+    margin-top: 6px;
+    box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.8), 0 6px 16px rgba(0, 0, 0, 0.6);
+    pointer-events: auto;
+  }
+
+  .touch-dpad {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .touch-btn-dir {
+    width: 66px;
+    height: 66px;
+    font-size: 24px;
+    border-radius: 14px;
+  }
+
+  .touch-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .touch-btn-jump {
+    min-width: 95px;
+    height: 66px;
+    font-size: 10px;
+    border-radius: 16px;
+  }
+
+  .touch-btn-attack {
+    min-width: 88px;
+    height: 66px;
+    font-size: 10px;
+    border-radius: 16px;
+  }
+
+  .touch-handheld-center {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .handheld-speaker {
+    width: 4px;
+    height: 28px;
+    background: #090e15;
+    border-radius: 2px;
+    box-shadow: 1px 0 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* Modal oynalari portret rejimida butun ekranga chiroyli moslashadi */
+  .screen-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    padding: 16px;
+    overflow-y: auto;
+    background: rgba(10, 16, 26, 0.95);
+    backdrop-filter: blur(8px);
+  }
+
+  .menu-box {
+    max-height: 94vh;
+    overflow-y: auto;
+    margin: auto;
+    width: 95%;
+    max-width: 440px;
+    padding: 20px 16px;
+    gap: 12px;
+  }
+
+  .game-title {
+    font-size: clamp(18px, 5.5vw, 24px);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN: MOBILE LANDSCAPE (FULLSCREEN IMMERSIVE)
+   ========================================================================== */
+@media (max-height: 480px) and (orientation: landscape) {
+  #game-wrapper {
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+
+  #game-container {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .rotate-hint {
+    display: none !important;
+  }
+
+  .touch-controls {
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    left: calc(14px + env(safe-area-inset-left, 0px));
+    right: calc(14px + env(safe-area-inset-right, 0px));
+  }
+
+  .touch-btn-dir {
+    width: 54px;
+    height: 54px;
+    font-size: 18px;
+  }
+
+  .touch-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .touch-btn-jump {
+    min-width: 82px;
+    height: 54px;
+    font-size: 9px;
+  }
+
+  .touch-btn-attack {
+    min-width: 78px;
+    height: 54px;
+    font-size: 9px;
+  }
+
+  /* Ixchamlashtirilgan modal menyular (hech qanday sig'maslik yoki kesilish bo'lmaydi) */
+  .screen-overlay {
+    padding: 6px;
+  }
+
+  .menu-box {
+    padding: 8px 14px;
+    gap: 6px;
+    max-height: 94vh;
+    overflow-y: auto;
+    max-width: 480px;
+    border-width: 3px;
+  }
+
+  .pirate-badge, .trophy-icon, .skull-icon, .chest-celebration-icon {
+    font-size: 24px;
+  }
+
+  .game-title {
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+
+  .game-subtitle, .pause-subtitle, .level-desc, .game-over-desc, .win-desc {
+    font-size: 7.5px;
+    line-height: 1.3;
+  }
+
+  .screen-title {
+    font-size: 14px;
+  }
+
+  .high-score-tag {
+    padding: 3px 8px;
+    font-size: 7.5px;
+    gap: 5px;
+  }
+
+  .instructions-card {
+    padding: 6px 10px;
+    font-size: 6.5px;
+    line-height: 1.5;
+  }
+
+  .instructions-card h3 {
+    font-size: 7px;
+    margin-bottom: 3px;
+  }
+
+  .hint-text {
+    font-size: 6.5px;
+    margin-top: 3px;
+    padding-top: 3px;
+  }
+
+  .btn {
+    font-size: 8.5px;
+    padding: 8px 14px;
+  }
+
+  .stats-card {
+    padding: 6px 10px;
+    gap: 4px;
+    font-size: 8px;
+  }
+}
+
+/* ==========================================================================
+   DESKTOP MOUSE / FINE POINTER
+   ========================================================================== */
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) and (min-height: 550px) {
+  .touch-controls {
+    display: none !important;
+  }
+  .rotate-hint {
+    display: none !important;
+  }
+}
