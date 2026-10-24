@@ -48,7 +48,118 @@ html, body {
 }
 
 /* ==========================================================================
-   FULLSCREEN & PSEUDO-FULLSCREEN API STYLING (CROSS-DEVICE IMMERSIVE)
+   ROTATE BLOCKER SCREEN (VERTIKAL TURGANDA FAQAT SHU EKRAN CHIQADI)
+   ========================================================================== */
+.rotate-screen-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: radial-gradient(circle at center, #182e4b 0%, #070e18 100%);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.rotate-screen-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 380px;
+  width: 90%;
+  background: rgba(10, 18, 30, 0.88);
+  border: 3px solid var(--gold-primary);
+  border-radius: 16px;
+  padding: 24px 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(255, 204, 0, 0.2);
+}
+
+.phone-rotate-anim {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.phone-icon-body {
+  width: 38px;
+  height: 60px;
+  border: 3.5px solid var(--gold-primary);
+  border-radius: 8px;
+  background: #101c2c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: phone-turn 2.4s ease-in-out infinite;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.phone-screen-inner {
+  font-size: 16px;
+}
+
+.rotate-arrow-badge {
+  position: absolute;
+  bottom: -4px;
+  right: 0px;
+  font-size: 20px;
+  animation: spin-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes phone-turn {
+  0%, 15% {
+    transform: rotate(0deg);
+  }
+  45%, 75% {
+    transform: rotate(-90deg);
+  }
+  95%, 100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes spin-pulse {
+  0%, 15% {
+    transform: scale(1) rotate(0deg);
+  }
+  45%, 75% {
+    transform: scale(1.15) rotate(-180deg);
+  }
+  95%, 100% {
+    transform: scale(1) rotate(-360deg);
+  }
+}
+
+.rotate-screen-title {
+  color: var(--gold-primary);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.rotate-screen-subtitle {
+  color: #bdc3c7;
+  font-size: 8px;
+  line-height: 1.6;
+}
+
+.rotate-screen-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   FULLSCREEN & PSEUDO-FULLSCREEN API STYLING
    ========================================================================== */
 :fullscreen,
 :-webkit-full-screen,
@@ -117,7 +228,7 @@ body.pseudo-fullscreen #gameCanvas {
 }
 
 /* ==========================================================================
-   DEFAULT DESKTOP LAYOUT (ARCADE CABINET FRAME)
+   DEFAULT DESKTOP / WIDE SCREEN LAYOUT
    ========================================================================== */
 #game-wrapper {
   position: relative;
@@ -129,6 +240,7 @@ body.pseudo-fullscreen #gameCanvas {
   justify-content: center;
   align-items: center;
   padding: 10px;
+  transition: transform 0.2s ease;
 }
 
 #game-container {
@@ -288,14 +400,14 @@ body.pseudo-fullscreen #gameCanvas {
    ========================================================================== */
 .game-banner {
   position: absolute;
-  top: 50px;
+  top: 48px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(231, 76, 60, 0.95);
   border: 2px solid #ffcc00;
   color: #fff;
   padding: 6px 14px;
-  font-size: 9.5px;
+  font-size: 9px;
   border-radius: 6px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
   z-index: 30;
@@ -323,7 +435,7 @@ body.pseudo-fullscreen #gameCanvas {
   z-index: 40;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  padding: 16px;
+  padding: 12px;
   animation: fade-in 0.25s ease-out;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -342,27 +454,27 @@ body.pseudo-fullscreen #gameCanvas {
   background: linear-gradient(180deg, #243342 0%, #16202a 100%);
   border: 3px solid var(--gold-primary);
   border-radius: 10px;
-  padding: 20px 24px;
+  padding: 16px 20px;
   text-align: center;
-  max-width: 500px;
+  max-width: 480px;
   width: 95%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(255, 204, 0, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   max-height: 94vh;
   overflow-y: auto;
 }
 
 .pirate-badge, .trophy-icon, .skull-icon, .chest-celebration-icon {
-  font-size: 38px;
+  font-size: 32px;
   line-height: 1;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
 }
 
 .game-title {
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.3;
   color: #fff;
   text-shadow: 3px 3px 0 #000, 0 0 10px rgba(255, 204, 0, 0.5);
@@ -380,71 +492,72 @@ body.pseudo-fullscreen #gameCanvas {
 }
 
 .game-subtitle, .pause-subtitle, .level-desc, .game-over-desc, .win-desc {
-  font-size: 8.5px;
+  font-size: 7.5px;
   color: #bdc3c7;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .screen-title {
-  font-size: 17px;
+  font-size: 15px;
   letter-spacing: 1.5px;
 }
 
 .high-score-tag {
   background: rgba(0, 0, 0, 0.5);
   border: 1px dashed var(--gold-dark);
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 8.5px;
+  font-size: 8px;
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .menu-cta-group {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
   width: 100%;
+  justify-content: center;
 }
 
 .instructions-card {
   background: rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
-  padding: 10px 12px;
-  font-size: 8px;
-  line-height: 1.6;
+  padding: 8px 12px;
+  font-size: 7.5px;
+  line-height: 1.5;
   width: 100%;
   text-align: left;
 }
 
 .instructions-card h3 {
   color: var(--gold-primary);
-  font-size: 8.5px;
-  margin-bottom: 6px;
+  font-size: 8px;
+  margin-bottom: 4px;
   text-align: center;
 }
 
 .control-row {
-  margin: 4px 0;
+  margin: 3px 0;
 }
 
 .key-pill {
   background: var(--wood-light);
   color: white;
-  padding: 2px 5px;
+  padding: 1px 4px;
   border-radius: 3px;
   border-bottom: 2px solid var(--wood-dark);
   font-weight: bold;
 }
 
 .hint-text {
-  margin-top: 6px;
+  margin-top: 5px;
   color: #81ecec;
-  font-size: 7.5px;
-  line-height: 1.5;
+  font-size: 7px;
+  line-height: 1.4;
   border-top: 1px dashed rgba(255, 255, 255, 0.2);
-  padding-top: 6px;
+  padding-top: 5px;
 }
 
 /* Stats card for end screens */
@@ -452,12 +565,12 @@ body.pseudo-fullscreen #gameCanvas {
   background: rgba(0, 0, 0, 0.4);
   border: 2px solid var(--wood-light);
   border-radius: 6px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  font-size: 8.5px;
+  gap: 6px;
+  font-size: 8px;
 }
 
 .stat-row {
@@ -468,12 +581,12 @@ body.pseudo-fullscreen #gameCanvas {
 
 .stat-row.highlight {
   border-top: 1px solid rgba(255, 204, 0, 0.3);
-  padding-top: 5px;
-  font-size: 9.5px;
+  padding-top: 4px;
+  font-size: 9px;
 }
 
 .highlight-big {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .new-record-tag {
@@ -481,7 +594,7 @@ body.pseudo-fullscreen #gameCanvas {
   color: white;
   padding: 4px;
   border-radius: 4px;
-  font-size: 8px;
+  font-size: 7.5px;
   letter-spacing: 1px;
   animation: pulse-btn 1s infinite alternate;
 }
@@ -490,14 +603,14 @@ body.pseudo-fullscreen #gameCanvas {
 .menu-buttons {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
   width: 100%;
 }
 
 .btn {
   font-family: var(--font-retro);
-  font-size: 9.5px;
-  padding: 11px 16px;
+  font-size: 8.5px;
+  padding: 9px 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -512,7 +625,7 @@ body.pseudo-fullscreen #gameCanvas {
 .btn-primary {
   background: linear-gradient(180deg, #ffcc00 0%, #e69500 100%);
   color: #1a1a1a;
-  border-bottom: 4px solid #b36b00;
+  border-bottom: 3.5px solid #b36b00;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
   font-weight: bold;
 }
@@ -531,7 +644,7 @@ body.pseudo-fullscreen #gameCanvas {
 .btn-secondary {
   background: linear-gradient(180deg, #4b6584 0%, #34495e 100%);
   color: #fff;
-  border-bottom: 4px solid #2c3e50;
+  border-bottom: 3.5px solid #2c3e50;
 }
 
 .btn-secondary:hover {
@@ -546,7 +659,7 @@ body.pseudo-fullscreen #gameCanvas {
 
 .btn-menu-fs {
   background: linear-gradient(180deg, #2980b9 0%, #1c5980 100%);
-  border-bottom: 4px solid #143d57;
+  border-bottom: 3.5px solid #143d57;
   color: #fff;
 }
 
@@ -560,36 +673,17 @@ body.pseudo-fullscreen #gameCanvas {
 }
 
 /* ==========================================================================
-   ROTATE SUGGESTION HINT (PORTRAIT MOBILE)
-   ========================================================================== */
-.rotate-hint {
-  display: none;
-  background: linear-gradient(90deg, #142132 0%, #1e334e 50%, #142132 100%);
-  border-top: 1px solid rgba(255, 204, 0, 0.35);
-  border-bottom: 1px solid rgba(255, 204, 0, 0.35);
-  color: #ffd700;
-  padding: 6px 12px;
-  font-size: 7.5px;
-  text-align: center;
-  cursor: pointer;
-  z-index: 50;
-  letter-spacing: 0.5px;
-  animation: glow-pulse 2s infinite alternate;
-  -webkit-tap-highlight-color: transparent;
-}
-
-@keyframes glow-pulse {
-  0% { background-color: #142132; }
-  100% { background-color: #203653; }
-}
-
-/* ==========================================================================
-   TOUCH CONTROLS BASE STYLES
+   TOUCH CONTROLS (LANDSCAPE FLOATING GAMEPAD)
    ========================================================================== */
 .touch-controls {
-  position: absolute;
+  position: fixed;
+  inset: 0;
   pointer-events: none;
-  z-index: 35;
+  z-index: 45;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 calc(18px + env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) calc(18px + env(safe-area-inset-left, 0px));
   transition: opacity 0.2s ease;
 }
 
@@ -598,12 +692,16 @@ body.pseudo-fullscreen #gameCanvas {
   pointer-events: auto;
 }
 
-.touch-handheld-center {
-  display: none;
+.touch-dpad {
+  gap: 10px;
+}
+
+.touch-actions {
+  gap: 8px;
 }
 
 .touch-btn {
-  background: rgba(20, 32, 48, 0.85);
+  background: rgba(16, 28, 44, 0.75);
   border: 2.5px solid var(--gold-primary);
   border-radius: 14px;
   color: #ffffff;
@@ -615,32 +713,34 @@ body.pseudo-fullscreen #gameCanvas {
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 204, 0, 0.15);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 204, 0, 0.15);
   transition: transform 0.05s, background-color 0.05s, border-color 0.05s;
   -webkit-tap-highlight-color: transparent;
 }
 
 .touch-btn:active, .touch-btn.active {
-  background: rgba(255, 204, 0, 0.6) !important;
+  background: rgba(255, 204, 0, 0.65) !important;
   border-color: #ffffff !important;
   transform: scale(0.92);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 0 14px rgba(255, 204, 0, 0.8);
 }
 
 .touch-btn-dir {
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
   font-size: 22px;
 }
 
 .touch-btn-jump {
-  min-width: 100px;
-  height: 60px;
-  font-size: 10.5px;
-  padding: 0 10px;
-  background: rgba(214, 48, 49, 0.88);
+  min-width: 86px;
+  height: 58px;
+  font-size: 9.5px;
+  padding: 0 8px;
+  background: rgba(214, 48, 49, 0.85);
   border-color: #ffd700;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
 .touch-btn-jump:active, .touch-btn-jump.active {
@@ -650,13 +750,13 @@ body.pseudo-fullscreen #gameCanvas {
 }
 
 .touch-btn-attack {
-  min-width: 90px;
-  height: 60px;
-  font-size: 10.5px;
-  padding: 0 10px;
+  min-width: 80px;
+  height: 58px;
+  font-size: 9.5px;
+  padding: 0 8px;
   background: linear-gradient(180deg, rgba(230, 126, 34, 0.9) 0%, rgba(211, 84, 0, 0.95) 100%);
   border-color: #ffd700;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.25);
 }
 
 .touch-btn-attack:active, .touch-btn-attack.active {
@@ -666,231 +766,78 @@ body.pseudo-fullscreen #gameCanvas {
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN: MOBILE PORTRAIT (FULL-WIDTH SEAMLESS RETRO DECK)
+   STRICT PORTRAIT BLOCKING (TELEFONDA VERTIKAL REJIMNI UMUMAN KO'RSATMASLIK)
    ========================================================================== */
 @media (orientation: portrait), (max-aspect-ratio: 1/1) {
-  html, body {
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    background: #080d16;
+  /* Agar forced-landscape yoqilmagan bo'lsa, o'yin maydoni yashiriladi va faqat burish ekrani chiqadi */
+  body:not(.forced-landscape) .rotate-screen-overlay {
+    display: flex !important;
   }
 
-  #game-wrapper {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    max-width: none;
-    max-height: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    background: #080d16;
-    overflow: hidden;
+  body:not(.forced-landscape) #game-wrapper {
+    display: none !important;
   }
+}
 
-  /* O'yin maydoni tor card ichida emas, butun ekran kengligida ochiladi */
-  #game-container {
-    width: 100vw;
-    max-width: 100vw;
-    aspect-ratio: 16 / 9;
-    height: auto;
-    max-height: 52vh;
-    border: none;
-    border-bottom: 2px solid var(--gold-dark);
-    border-radius: 0;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9);
-    flex-shrink: 0;
-    background: #000;
-  }
+/* ==========================================================================
+   CSS FORCED-LANDSCAPE (ORIENTATION-LOCK BO'LGANDA EKRANNI 90° BURISH)
+   ========================================================================== */
+body.forced-landscape .rotate-screen-overlay {
+  display: none !important;
+}
 
-  #gameCanvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+body.forced-landscape {
+  overflow: hidden !important;
+  width: 100vw !important;
+  height: 100vh !important;
+}
 
-  /* Ultra-compact HUD for mobile portrait */
-  .hud {
-    top: calc(4px + env(safe-area-inset-top, 0px));
-    left: 4px;
-    right: 4px;
-    padding: 3px 6px;
-    gap: 4px;
-    border-radius: 6px;
-  }
+body.forced-landscape #game-wrapper {
+  display: flex !important;
+  position: fixed !important;
+  width: 100vh !important;
+  height: 100vw !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) rotate(90deg) !important;
+  transform-origin: center center !important;
+  max-width: none !important;
+  max-height: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  z-index: 1000 !important;
+}
 
-  .hud-left, .hud-right {
-    gap: 4px;
-  }
+body.forced-landscape #game-container {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 
-  .hud-item {
-    font-size: 7.5px;
-    gap: 2px;
-  }
-
-  .hud-icon {
-    font-size: 10.5px;
-  }
-
-  .hud-coin-badge {
-    width: 10px;
-    height: 10px;
-  }
-
-  .hearts-container .hud-val {
-    font-size: 10.5px;
-    letter-spacing: -1px;
-  }
-
-  .hud-level-badge {
-    padding: 1px 4px;
-  }
-
-  .hud-level-tag {
-    font-size: 6.5px;
-  }
-
-  .hud-actions {
-    gap: 3px;
-  }
-
-  .btn-icon {
-    width: 22px;
-    height: 22px;
-    font-size: 10px;
-    border-radius: 4px;
-  }
-
-  .game-banner {
-    top: 36px;
-    padding: 5px 10px;
-    font-size: 8px;
-    max-width: 90%;
-    white-space: normal;
-  }
-
-  /* Telefonni yonboshga burish haqidagi taklif bannneri */
-  .rotate-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 5px 8px;
-    font-size: 7px;
-    flex-shrink: 0;
-  }
-
-  /* Sensorli boshqaruv paneli portret rejimida to'liq pastki qismni egallaydi */
-  .touch-controls {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    flex: 1;
-    min-height: 160px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 18px calc(14px + env(safe-area-inset-bottom, 0px)) 18px;
-    background: radial-gradient(circle at 50% 25%, #16263b 0%, #080d15 100%);
-    border: none;
-    border-top: 1.5px solid rgba(255, 204, 0, 0.35);
-    border-radius: 0;
-    margin: 0;
-    box-shadow: inset 0 6px 20px rgba(0, 0, 0, 0.8);
-    pointer-events: auto;
-  }
-
-  .touch-dpad {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .touch-btn-dir {
-    width: 64px;
-    height: 64px;
-    font-size: 24px;
-    border-radius: 16px;
-    background: rgba(22, 38, 58, 0.95);
-  }
-
-  .touch-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .touch-btn-jump {
-    min-width: 90px;
-    height: 64px;
-    font-size: 9.5px;
-    border-radius: 16px;
-  }
-
-  .touch-btn-attack {
-    min-width: 84px;
-    height: 64px;
-    font-size: 9.5px;
-    border-radius: 16px;
-  }
-
-  .touch-handheld-center {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.35;
-    user-select: none;
-    pointer-events: none;
-  }
-
-  .handheld-speaker {
-    width: 4px;
-    height: 24px;
-    background: #090e15;
-    border-radius: 2px;
-    box-shadow: 1px 0 0 rgba(255, 255, 255, 0.15);
-  }
-
-  /* Modal oynalari portretda butun ekranda qulay ko'rinadi */
-  .screen-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    padding: 12px;
-    overflow-y: auto;
-    background: rgba(8, 14, 24, 0.95);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  .menu-box {
-    max-height: 92vh;
-    overflow-y: auto;
-    margin: auto;
-    width: 95%;
-    max-width: 420px;
-    padding: 18px 14px;
-    gap: 10px;
-  }
-
-  .game-title {
-    font-size: clamp(16px, 5vw, 22px);
-  }
+body.forced-landscape #gameCanvas {
+  width: auto !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  object-fit: contain !important;
 }
 
 /* ==========================================================================
    RESPONSIVE DESIGN: MOBILE LANDSCAPE (HAGIQIY TO'LIQ EKRAN)
    ========================================================================== */
-@media (orientation: landscape) and (max-height: 720px),
-       (orientation: landscape) and (hover: none) {
+@media (orientation: landscape) {
+  .rotate-screen-overlay {
+    display: none !important;
+  }
+
   html, body {
     width: 100vw;
     height: 100vh;
@@ -948,11 +895,6 @@ body.pseudo-fullscreen #gameCanvas {
     display: block;
   }
 
-  .rotate-hint {
-    display: none !important;
-  }
-
-  /* Landscape rejimida HUD ixcham va qulay joylashadi */
   .hud {
     top: calc(4px + env(safe-area-inset-top, 0px));
     left: calc(8px + env(safe-area-inset-left, 0px));
@@ -1009,134 +951,6 @@ body.pseudo-fullscreen #gameCanvas {
     padding: 5px 10px;
     font-size: 8px;
   }
-
-  /* Sensorli boshqaruvchi landscape rejimida ekranning chekkalariga joylashadi */
-  .touch-controls {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 50;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 0 calc(16px + env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) calc(16px + env(safe-area-inset-left, 0px));
-  }
-
-  .touch-dpad {
-    display: flex;
-    gap: 8px;
-    pointer-events: auto;
-  }
-
-  .touch-btn-dir {
-    width: 54px;
-    height: 54px;
-    font-size: 20px;
-    border-radius: 14px;
-    background: rgba(16, 28, 44, 0.72);
-    border: 2.5px solid var(--gold-primary);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-
-  .touch-actions {
-    display: flex;
-    gap: 6px;
-    pointer-events: auto;
-  }
-
-  .touch-btn-jump {
-    min-width: 80px;
-    height: 54px;
-    font-size: 9px;
-    border-radius: 14px;
-    background: rgba(214, 48, 49, 0.82);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-
-  .touch-btn-attack {
-    min-width: 76px;
-    height: 54px;
-    font-size: 9px;
-    border-radius: 14px;
-    background: rgba(230, 126, 34, 0.85);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-
-  /* Landscape modal menyular */
-  .screen-overlay {
-    padding: 6px;
-    overflow-y: auto;
-  }
-
-  .menu-box {
-    padding: 8px 14px;
-    gap: 6px;
-    max-height: 94vh;
-    overflow-y: auto;
-    max-width: 480px;
-    border-width: 2.5px;
-  }
-
-  .pirate-badge, .trophy-icon, .skull-icon, .chest-celebration-icon {
-    font-size: 24px;
-  }
-
-  .game-title {
-    font-size: 15px;
-    letter-spacing: 1px;
-  }
-
-  .game-subtitle, .pause-subtitle, .level-desc, .game-over-desc, .win-desc {
-    font-size: 7px;
-    line-height: 1.3;
-  }
-
-  .screen-title {
-    font-size: 13.5px;
-  }
-
-  .high-score-tag {
-    padding: 3px 8px;
-    font-size: 7.5px;
-    gap: 5px;
-  }
-
-  .menu-cta-group {
-    flex-direction: row;
-    gap: 8px;
-    justify-content: center;
-  }
-
-  .instructions-card {
-    padding: 5px 8px;
-    font-size: 6.5px;
-    line-height: 1.4;
-  }
-
-  .instructions-card h3 {
-    font-size: 7px;
-    margin-bottom: 2px;
-  }
-
-  .hint-text {
-    font-size: 6px;
-    margin-top: 3px;
-    padding-top: 3px;
-  }
-
-  .btn {
-    font-size: 8px;
-    padding: 7px 12px;
-  }
-
-  .stats-card {
-    padding: 6px 10px;
-    gap: 4px;
-    font-size: 7.5px;
-  }
 }
 
 /* ==========================================================================
@@ -1146,7 +960,7 @@ body.pseudo-fullscreen #gameCanvas {
   .touch-controls {
     display: none !important;
   }
-  .rotate-hint {
+  .rotate-screen-overlay {
     display: none !important;
   }
   .btn-menu-fs {

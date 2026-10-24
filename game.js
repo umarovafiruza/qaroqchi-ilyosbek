@@ -3148,7 +3148,10 @@ class GameEngine {
       btnTouchJump: document.getElementById('btn-touch-jump'),
       btnTouchAttack: document.getElementById('btn-touch-attack'),
       rotateHint: document.getElementById('rotate-hint'),
-      btnMenuFullscreen: document.getElementById('btn-menu-fullscreen')
+      btnMenuFullscreen: document.getElementById('btn-menu-fullscreen'),
+      screenRotateDevice: document.getElementById('screen-rotate-device'),
+      btnRotateFullscreen: document.getElementById('btn-rotate-fullscreen'),
+      btnForceRotate: document.getElementById('btn-force-rotate')
     };
 
     this.lastTime = 0;
@@ -3287,7 +3290,25 @@ class GameEngine {
     );
 
     // 3. Menyu tugmalari
+    if (this.dom.btnRotateFullscreen) {
+      this.dom.btnRotateFullscreen.addEventListener('click', () => {
+        triggerHaptic();
+        this.toggleFullscreen();
+      });
+    }
+
+    if (this.dom.btnForceRotate) {
+      this.dom.btnForceRotate.addEventListener('click', () => {
+        triggerHaptic();
+        document.body.classList.toggle('forced-landscape');
+        window.scrollTo(0, 0);
+      });
+    }
+
     this.dom.btnStart.addEventListener('click', () => {
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
       this.sounds.init();
       triggerHaptic();
       this.startNewGame();

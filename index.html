@@ -11,12 +11,31 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Dedicated Device Rotate Blocker Screen (Vertikal holatda chiqadigan ekran) -->
+  <div id="screen-rotate-device" class="rotate-screen-overlay">
+    <div class="rotate-screen-content">
+      <div class="phone-rotate-anim">
+        <div class="phone-icon-body">
+          <div class="phone-screen-inner">🏴‍☠️</div>
+        </div>
+        <div class="rotate-arrow-badge">🔄</div>
+      </div>
+      <h2 class="rotate-screen-title">TELEFONNI YONBOSHGA BURING</h2>
+      <p class="rotate-screen-subtitle">O'yin faqat gorizontal (Landscape) rejimida ishlaydi</p>
+
+      <div class="rotate-screen-actions">
+        <button id="btn-rotate-fullscreen" class="btn btn-primary pulse-btn">⛶ TO'LIQ EKRANGA O'TISH</button>
+        <button id="btn-force-rotate" class="btn btn-secondary">🔄 EKRANNI 90° BURISH</button>
+      </div>
+    </div>
+  </div>
+
   <div id="game-wrapper">
     <!-- Game Container with Canvas & Overlays -->
     <div id="game-container">
       <canvas id="gameCanvas" width="640" height="360"></canvas>
 
-      <!-- Heads-Up Display (HUD) - Ultra Compact Header -->
+      <!-- Heads-Up Display (HUD) - Ultra Compact Retro Glass Header -->
       <div id="hud" class="hud hidden">
         <div class="hud-left">
           <div class="hud-item hearts-container" title="Jonlar">
@@ -37,7 +56,7 @@
         </div>
 
         <div class="hud-right">
-          <div class="hud-item hud-level-item" title="Bosqich">
+          <div class="hud-item hud-level-badge" title="Bosqich">
             <span class="hud-label">LV</span>
             <span id="hud-level" class="hud-val">1/4</span>
           </div>
@@ -186,19 +205,11 @@
       </div>
     </div>
 
-    <!-- Rotate suggestion hint for portrait mobile (interactive) -->
-    <div id="rotate-hint" class="rotate-hint" title="Bosing: To'liq ekranga o'tish">📱 To'liq ekran uchun telefonni yonboshga buring (Landscape) ➔</div>
-
     <!-- Touch Controls (Mobile / Tablet Virtual Gamepad) -->
     <div id="touch-controls" class="touch-controls hidden">
       <div class="touch-dpad">
         <button id="btn-touch-left" class="touch-btn touch-btn-dir" aria-label="Chapga">◀</button>
         <button id="btn-touch-right" class="touch-btn touch-btn-dir" aria-label="O'ngga">▶</button>
-      </div>
-      <div class="touch-handheld-center" aria-hidden="true">
-        <span class="handheld-speaker"></span>
-        <span class="handheld-speaker"></span>
-        <span class="handheld-speaker"></span>
       </div>
       <div class="touch-actions">
         <button id="btn-touch-attack" class="touch-btn touch-btn-attack" aria-label="Zarba">⚔️ ZARBA</button>
